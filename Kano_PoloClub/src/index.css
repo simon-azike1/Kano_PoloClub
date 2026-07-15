@@ -3,12 +3,12 @@
 
 @theme {
   /* Brand Colors */
-  --color-brand-primary: #6b1d2f;    /* Deep Crimson / Burgundy */
-  --color-brand-accent: #d4af37;     /* Champagne Gold / Antique Brass */
-  --color-brand-bg: #fdfbf7;         /* Ivory / Parchment White */
-  --color-brand-text: #2b2625;       /* Charcoal / Deep Espresso */
+  --color-brand-primary: #6b1d2f;   
+  --color-brand-accent: #d4af37;     
+  --color-brand-bg: #fdfbf7;        
+  --color-brand-text: #2b2625;
 
   /* Typography / Fonts */
-  --font-serif: "Playfair Display", "Georgia", serif; /* Elegant Serif for Headings */
-  --font-sans: "Inter", "Helvetica Neue", sans-serif; /* Clean Sans-serif for Body */
+  --font-serif: "Playfair Display", "Georgia", serif; 
+  --font-sans: "Inter", "Helvetica Neue", sans-serif;
 }
