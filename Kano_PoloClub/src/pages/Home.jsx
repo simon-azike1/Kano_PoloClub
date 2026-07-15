@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PageWrapper, FadeUpSection, FadeUpItem, SlideLeftItem, SlideRightItem, ScaleInItem } from '../components/animations';
 import heroImage from '../assets/bg (6).jpg';
@@ -8,23 +8,41 @@ import { facilities, benefits, events } from '../data';
 import { FieldMark, SectionHeading } from '../components/ui';
 
 /* ──────────────────────────────────────────────
+   HERO BACKGROUND VIDEO
+   ────────────────────────────────────────────── */
+const HERO_VIDEO_URL = 'https://videos.pexels.com/video-files/18498467/18498467-hd_1920_1080_30fps.mp4';
+
+/* ──────────────────────────────────────────────
    MAIN HOME COMPONENT
    ────────────────────────────────────────────── */
 
 export default function Home() {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
   return (
     <PageWrapper>
     <main className="min-h-screen bg-brand-bg text-brand-text font-sans">
       {/* ═══════════════════════════════════════════
-          HERO SECTION
+          HERO SECTION — Background Video
           ═══════════════════════════════════════════ */}
       <section className="relative h-[85vh] w-full overflow-hidden">
-        {/* Background image */}
+        {/* Background video */}
         <div className="absolute inset-0">
+          {/* Fallback image shown until video loads */}
           <img
             src={heroImage}
-            alt="Kano Polo Club grounds at sunset"
-            className="w-full h-full object-cover"
+            alt="Kano Polo Club grounds"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-0' : 'opacity-100'}`}
+          />
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onLoadedData={() => setVideoLoaded(true)}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+            src={HERO_VIDEO_URL}
           />
           {/* Rich gradient overlay for readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/70 to-brand-primary/15" />
