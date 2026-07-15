@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import logo from '../assets/KPC_LOGO.png';
+import logo from '/KPC_LOGO.png';
 
 const links = [
   { to: '/', label: 'Home' },
