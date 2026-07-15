@@ -43,7 +43,7 @@ export const IconTikTok = () => (
 export const SocialLinks = ({ className = "flex items-center gap-4" }) => (
   <div className={className} role="list" aria-label="Social media links">
     <a 
-      href="https://instagram.com" 
+      href="https://www.instagram.com/kanopoloclub?igsh=YTNvcW92bTdueXhn" 
       target="_blank" 
       rel="noopener noreferrer"
       className="flex items-center justify-center w-10 h-10 bg-brand-bg/50 hover:bg-brand-accent/10 transition-all duration-300 text-brand-text/60 hover:text-brand-accent"
@@ -52,7 +52,7 @@ export const SocialLinks = ({ className = "flex items-center gap-4" }) => (
       <IconInstagram />
     </a>
     <a 
-      href="https://facebook.com" 
+      href="https://web.facebook.com/p/Kano-Polo-Club-100065149024262/?_rdc=1&_rdr#" 
       target="_blank" 
       rel="noopener noreferrer"
       className="flex items-center justify-center w-10 h-10 bg-brand-bg/50 hover:bg-brand-accent/10 transition-all duration-300 text-brand-text/60 hover:text-brand-accent"
@@ -61,25 +61,16 @@ export const SocialLinks = ({ className = "flex items-center gap-4" }) => (
       <IconFacebook />
     </a>
     <a 
-      href="https://twitter.com" 
+      href="https://x.com/PoloClubKano" 
       target="_blank" 
       rel="noopener noreferrer"
       className="flex items-center justify-center w-10 h-10 bg-brand-bg/50 hover:bg-brand-accent/10 transition-all duration-300 text-brand-text/60 hover:text-brand-accent"
-      aria-label="Twitter"
+      aria-label="X (Twitter)"
     >
       <IconTwitter />
     </a>
     <a 
-      href="https://linkedin.com" 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="flex items-center justify-center w-10 h-10 bg-brand-bg/50 hover:bg-brand-accent/10 transition-all duration-300 text-brand-text/60 hover:text-brand-accent"
-      aria-label="LinkedIn"
-    >
-      <IconLinkedIn />
-    </a>
-    <a 
-      href="https://youtube.com" 
+      href="https://www.youtube.com/@live.ukpolo" 
       target="_blank" 
       rel="noopener noreferrer"
       className="flex items-center justify-center w-10 h-10 bg-brand-bg/50 hover:bg-brand-accent/10 transition-all duration-300 text-brand-text/60 hover:text-brand-accent"
