@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const ScrollToTop = () => {
   const [visible, setVisible] = useState(false);
+  const location = useLocation();
 
+  // Scroll to top when the route changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location]);
+
+  // Handle scroll visibility for the button
   useEffect(() => {
     const handleScroll = () => {
       setVisible(window.scrollY > 300);

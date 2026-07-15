@@ -1,20 +1,30 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  PageWrapper,
-  FadeUpSection,
-  FadeUpItem,
-  SlideLeftItem,
-  SlideRightItem,
-  ScaleInItem,
-} from '../components/animations';
+import { motion, useReducedMotion } from 'framer-motion';
 import { SocialLinks } from '../components/SocialIcons';
 import heroImage from '../assets/bg (6).jpg';
 import heritageImage from '../assets/bg.jpg';
 
-/* ──────────────────────────────────────────────
-   SVG ICONS (Inline, self-contained)
-   ────────────────────────────────────────────── */
+// Custom ease for premium feel
+const customEase = [0.16, 1, 0.3, 1];
+
+// Helper to split text into spans for staggered animation
+const splitTextIntoSpans = (text, splitBy = 'word') => {
+  if (!text) return '';
+  if (splitBy === 'char') {
+    return text.split('').map((char, i) => (
+      <span key={i} style={{ display: 'inline-block' }}>
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  }
+  // Default to word split
+  return text.split(' ').map((word, i) => (
+    <span key={i} style={{ display: 'inline-block', marginRight: i === text.split(' ').length - 1 ? 0 : '0.2em' }}>
+      {word}{i === text.split(' ').length - 1 ? '' : ' '}
+    </span>
+  ));
+};
 
 const IconCrosshair = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -78,31 +88,53 @@ const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="group bg-white border border-brand-accent/25 overflow-hidden transition-all duration-300 hover:border-brand-accent/50">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-        aria-expanded={isOpen}
-      >
-        <h3 className="font-serif text-lg text-brand-text pr-4 group-hover:text-brand-primary transition-colors duration-300">
-          {question}
-        </h3>
-        <IconChevronDown className={`flex-shrink-0 h-5 w-5 text-brand-accent transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      <div className="overflow-hidden transition-all duration-300 ease-out">
-        <div className={`px-6 pb-5 ${isOpen ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}>
-          <p className="font-sans text-sm text-brand-text/70 leading-relaxed border-t border-brand-accent/10 pt-4">
-            {answer}
-          </p>
-        </div>
+    <motion.div
+      initial={{ y: 10, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.6, ease: customEase }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <div className="group relative p-6 bg-white border border-brand-accent/25 overflow-hidden transition-all duration-500 hover:border-brand-accent/60 hover:shadow-lg hover:shadow-brand-accent/5">
+        <motion.button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <h3 className="font-serif text-lg text-brand-text pr-4 group-hover:text-brand-primary transition-colors duration-300">
+            {question}
+          </h3>
+          <motion.svg
+            className={`flex-shrink-0 h-5 w-5 text-brand-accent transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+            width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <path d="M5 7L10 12L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </motion.svg>
+        </motion.button>
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          whileInView={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+          transition={{ height: { duration: 0.3, ease: customEase }, opacity: { duration: 0.3, ease: customEase } }}
+          className="overflow-hidden"
+        >
+          <div className={`px-6 pb-5 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+            <p className="font-sans text-sm text-brand-text/70 leading-relaxed border-t border-brand-accent/10 pt-4">
+              {answer}
+            </p>
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
 /* ──────────────────────────────────────────────
-   FAQ DATA
-   ────────────────────────────────────────────── */
+    FAQ DATA
+    ────────────────────────────────────────────── */
 
 const faqs = [
   {
@@ -148,344 +180,551 @@ const faqs = [
 ];
 
 /* ──────────────────────────────────────────────
-   SUB-LAYOUT COMPONENTS
-   ────────────────────────────────────────────── */
+    SUB-LAYOUT COMPONENTS
+    ────────────────────────────────────────────── */
 
 const FieldMark = () => (
-  <div className="flex items-center justify-center gap-4 w-full py-8">
-    <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
-    <div className="text-brand-accent/60">
-      <IconCrosshair />
+  <motion.div
+    initial={{ y: 10, opacity: 0 }}
+    whileInView={{ y: 0, opacity: 1 }}
+    viewport={{ once: true, amount: 0.15 }}
+    transition={{ duration: 0.8, ease: customEase }}
+  >
+    <div className="flex items-center justify-center gap-4 w-full py-8">
+      <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+      <div className="text-brand-accent/60">
+        <IconCrosshair />
+      </div>
+      <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
     </div>
-    <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
-  </div>
+  </motion.div>
 );
 
 const SectionHeading = ({ eyebrow, title }) => (
-  <div className="text-center mb-12 md:mb-16">
-    <span className="block text-xs md:text-sm font-sans font-medium tracking-[0.25em] uppercase text-brand-accent mb-3">
-      {eyebrow}
-    </span>
-    <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-normal text-brand-text leading-tight">
-      {title}
-    </h2>
-    <div className="mt-5 flex justify-center">
-      <div className="w-16 h-px bg-brand-accent/60" />
+  <motion.div
+    initial={{ y: 20, opacity: 0 }}
+    whileInView={{ y: 0, opacity: 1 }}
+    viewport={{ once: true, amount: 0.15 }}
+    transition={{ duration: 0.8, ease: customEase }}
+  >
+    <div className="text-center mb-12 md:mb-16">
+      <span className="block text-xs md:text-sm font-sans font-medium tracking-[0.25em] uppercase text-brand-accent mb-3">
+        {eyebrow}
+      </span>
+      <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-normal text-brand-text leading-tight">
+        {title}
+      </h2>
+      <div className="mt-5 flex justify-center">
+        <div className="w-16 h-px bg-brand-accent/60" />
+      </div>
     </div>
-  </div>
+  </motion.div>
 );
 
 /* ──────────────────────────────────────────────
-   MAIN CONTACT COMPONENT
-   ────────────────────────────────────────────── */
+    MAIN CONTACT COMPONENT
+    ────────────────────────────────────────────── */
 
 const Contact = () => {
+  const reducedMotion = useReducedMotion();
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+    submitting: false,
+    success: false,
+    error: null
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormState(prev => ({ ...prev, submitting: true, error: null }));
+    
+    // Simulate form submission
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setFormState(prev => ({ ...prev, submitting: false, success: true }));
+      
+      // Reset form after success
+      setTimeout(() => {
+        setFormState({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          submitting: false,
+          success: false,
+          error: null
+        });
+      }, 3000);
+    } catch (err) {
+      setFormState(prev => ({ ...prev, submitting: false, error: 'Failed to send message. Please try again.' }));
+    }
+  };
+
   return (
-    <PageWrapper>
+    <motion.div>
       <main className="min-h-screen bg-brand-bg text-brand-text font-sans">
-        {/* ══════════════════════════════════════════
+        {/* ═════════════════════════════════════════
             HERO SECTION
-            ════════════════════════════════════════════ */}
+            ═════════════════════════════════════════════════ */}
         <section className="relative h-[85vh] w-full overflow-hidden">
-{/* Background image placeholder */}
+          {/* Background image */}
           <div className="absolute inset-0">
-            <img
+            <motion.img
               src={heroImage}
               alt="Kano Polo Club grounds at sunset"
               className="w-full h-full object-cover"
+              initial={reducedMotion ? {} : { scale: 1.05 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, ease: customEase }}
             />
             {/* Darker gradient overlay for readability */}
-             <div className="absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/80 to-brand-primary/20" />
-           </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/20" />
+          </div>
 
           {/* Hero content */}
           <div className="relative z-10 flex flex-col justify-end h-full px-6 md:px-12 lg:px-20 pb-16 md:pb-24 max-w-7xl mx-auto">
-            <FadeUpSection className="max-w-3xl">
-              <FadeUpItem delay={0}>
-                <span className="inline-block text-xs md:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-4">
-                  Est. 1950 — Northern Nigeria
-                </span>
-              </FadeUpItem>
-              <FadeUpItem delay={0.15}>
-                <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-normal text-white leading-[1.1] mb-6">
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, ease: customEase }}
+            >
+              <div className="max-w-3xl">
+                {/* Est. 1950 */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.6, delay: 0, ease: customEase }}
+                >
+                  <span className="inline-block text-xs md:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-4">
+                    Est. 1950 — Northern Nigeria
+                  </span>
+                </motion.div>
+
+                {/* Headline */}
+                <motion.h1
+                  className="font-serif text-4xl md:text-6xl lg:text-7xl font-normal text-white leading-[1.1] mb-6"
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 1.2, delay: 0.15, ease: customEase }}
+                >
                   Contact Us
-                </h1>
-              </FadeUpItem>
-              <FadeUpItem delay={0.3}>
-                <p className="font-sans text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6">
+                </motion.h1>
+
+                {/* Subheadline */}
+                <motion.p
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
+                  className="font-sans text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6"
+                >
                   Whether you're interested in membership, have questions about our facilities, or want to book a visit, our team is here to help.
-                </p>
-                <div className="flex flex-wrap items-center gap-6 text-white/70 text-sm mb-8">
-                  <div className="flex items-center gap-2">
+                </motion.p>
+
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.45, ease: customEase }}
+                  className="flex flex-wrap items-center gap-6 text-white/70 text-sm mb-8"
+                >
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0, ease: customEase }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <IconPhone className="h-5 w-5 text-brand-accent" />
                     <span>+234 XXX XXX XXX</span>
-                  </div>
-                  <div className="flex items-center gap-2">
+                  </motion.div>
+                  <motion.div
+                    initial={{ x: 20, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <IconEmail className="h-5 w-5 text-brand-accent" />
                     <span>info@kanopoloclub.ng</span>
-                  </div>
-                </div>
-              </FadeUpItem>
-              <FadeUpItem delay={0.45}>
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    to="/about"
-                    className="inline-flex items-center gap-2 px-7 py-3 bg-brand-accent text-brand-primary font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white hover:text-brand-primary"
+                  </motion.div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.6, ease: customEase }}
+                  className="flex flex-wrap gap-4"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98, y: 0 }}
                   >
-                    Learn About Us
-                    <IconArrowRight />
-                  </Link>
-                  <Link
-                    to="/club"
-                    className="inline-flex items-center gap-2 px-7 py-3 border border-white/40 text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white/10 hover:border-white/60"
+                    <Link
+                      to="/about"
+                      className="inline-flex items-center gap-2 px-7 py-3 bg-brand-accent text-brand-primary font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white hover:text-brand-primary"
+                    >
+                      Learn About Us
+                      <IconArrowRight />
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98, y: 0 }}
                   >
-                    Explore The Club
-                  </Link>
-                </div>
-              </FadeUpItem>
-            </FadeUpSection>
+                    <Link
+                      to="/club"
+                      className="inline-flex items-center gap-2 px-7 py-3 border border-white/40 text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white/10 hover:border-white/60"
+                    >
+                      Explore The Club
+                    </Link>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ═════════════════════════════════════════
+        {/* ══════════════════════════════════════
             FIELD MARK DIVIDER
-            ════════════════════════════════════════════ */}
+            ═════════════════════════════════════════════════ */}
         <FieldMark />
 
-        {/* ═════════════════════════════════════════
+        {/* ════════════════════════════════════════
             CONTACT INFORMATION
-            ════════════════════════════════════════════ */}
+            ══════════════════════════════════════ */}
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Get in Touch" title="Contact Information" />
-            </FadeUpItem>
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Get in Touch" title="Contact Information" />
+          </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* Contact Form */}
-              <FadeUpItem delay={0}>
-                <div className="space-y-6">
-                  <form className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-brand-text/60 mb-2">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-brand-text/60 mb-2">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="subject" className="block text-sm font-medium text-brand-text/60 mb-2">
-                        Subject
-                      </label>
-                      <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        required
-                        className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-brand-text/60 mb-2">
-                        Message
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        rows="5"
-                        required
-                        className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 resize-none"
-                      />
-                    </div>
-                    <div className="flex items-center">
-                      <button
-                        type="submit"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-text"
-                      >
-                        Send Message
-                        <IconArrowRight />
-                      </button>
-                    </div>
-                  </form>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Contact Form */}
+            <motion.div
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-brand-text/60 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formState.name}
+                    onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
+                    required
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    disabled={formState.submitting}
+                  />
                 </div>
-              </FadeUpItem>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-brand-text/60 mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formState.email}
+                    onChange={(e) => setFormState(prev => ({ ...prev, email: e.target.value }))}
+                    required
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    disabled={formState.submitting}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-brand-text/60 mb-2">
+                    Subject
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formState.subject}
+                    onChange={(e) => setFormState(prev => ({ ...prev, subject: e.target.value }))}
+                    required
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    disabled={formState.submitting}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-brand-text/60 mb-2">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formState.message}
+                    onChange={(e) => setFormState(prev => ({ ...prev, message: e.target.value }))}
+                    rows="5"
+                    required
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 resize-none"
+                    disabled={formState.submitting}
+                  />
+                </div>
+                <div className="flex items-center">
+                  <motion.button
+                    type="submit"
+                    disabled={formState.submitting || formState.success}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-text"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {formState.submitting ? 'Sending...' : 'Send Message'}
+                    <IconArrowRight />
+                  </motion.button>
+</div>
+                
+                <>
+                {formState.success && (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
+                    className="mt-4 p-4 bg-brand-bg/50 text-center text-brand-text/80"
+                  >
+                    Message sent successfully! We'll get back to you soon.
+                  </motion.div>
+                )}
+                
+                {formState.error && (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    whileInView={{ y: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0.1, ease: customEase }}
+                    className="mt-4 p-4 bg-red-50 border border-red-200 text-center text-red-600"
+                  >
+                     {formState.error}
+                   </motion.div>
+                )}
+                </>
+              </form>
+            </motion.div>
 
-              {/* Contact Info */}
-              <FadeUpItem delay={0.15}>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
-                        <IconLocation className="h-6 w-6 text-brand-accent" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-lg text-brand-text mb-2">
-                        Location
-                      </h3>
-                      <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
-                        Kano Polo Club, Kano State, Nigeria
-                      </p>
+            {/* Contact Info */}
+            <motion.div
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
+                      <IconLocation className="h-6 w-6 text-brand-accent" />
                     </div>
                   </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
-                        <IconPhone className="h-6 w-6 text-brand-accent" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-lg text-brand-text mb-2">
-                        Phone
-                      </h3>
-                      <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
-                        +234 XXX XXX XXX
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
-                        <IconEmail className="h-6 w-6 text-brand-accent" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-lg text-brand-text mb-2">
-                        Email
-                      </h3>
-                      <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
-                        info@kanopoloclub.ng
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
-                        <IconClock className="h-6 w-6 text-brand-accent" />
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-lg text-brand-text mb-2">
-                        Hours
-                      </h3>
-                      <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
-                        Daily 8:00 AM - 6:00 PM
-                      </p>
-                    </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                      Location
+                    </h3>
+                    <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
+                      Kano Polo Club, Kano State, Nigeria
+                    </p>
                   </div>
                 </div>
-              </FadeUpItem>
-            </div>
-          </FadeUpSection>
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
+                      <IconPhone className="h-6 w-6 text-brand-accent" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                      Phone
+                    </h3>
+                    <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
+                      +234 XXX XXX XXX
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
+                      <IconEmail className="h-6 w-6 text-brand-accent" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                      Email
+                    </h3>
+                    <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
+                      info@kanopoloclub.ng
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0">
+                    <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
+                      <IconClock className="h-6 w-6 text-brand-accent" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                      Hours
+                    </h3>
+                    <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
+                      Daily 8:00 AM - 6:00 PM
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </section>
 
-        {/* ════════════════════════════════════════
+        {/* ═══════════════════════════════════════
             FIELD MARK DIVIDER
-            ════════════════════════════════════════════ */}
+            ════════════════════════════════════════════════ */}
         <FieldMark />
 
-        {/* ════════════════════════════════════════════
+        {/* ════════════════════════════════════════
             FREQUENTLY ASKED QUESTIONS
-            ════════════════════════════════════════════ */}
+            ═════════════════════════════════════ */}
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Quick Answers" title="Frequently Asked Questions" />
-            </FadeUpItem>
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Quick Answers" title="Frequently Asked Questions" />
+          </motion.div>
 
-            <div className="mt-12 max-w-3xl mx-auto">
-              <div className="space-y-4">
-                {faqs.map((faq, index) => (
-                  <FadeUpItem key={faq.id} delay={index * 0.1}>
-                    <FAQItem {...faq} />
-                  </FadeUpItem>
-                ))}
-              </div>
-            </div>
-          </FadeUpSection>
-        </section>
-
-        {/* ════════════════════════════════════════
-            FIELD MARK DIVIDER
-            ════════════════════════════════════════════ */}
-        <FieldMark />
-
-        {/* ═════════════════════════════════════════
-            SOCIAL MEDIA
-            ═══════════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Stay Connected" title="Follow Us" />
-            </FadeUpItem>
-
-            <div className="flex flex-col items-center gap-8">
-              <FadeUpItem delay={0}>
-                <p className="text-center text-brand-text/60 max-w-xl">
-                  Stay updated with the latest news, events, and behind-the-scenes content from Kano Polo Club.
-                </p>
-              </FadeUpItem>
-              <FadeUpItem delay={0.15}>
-                <SocialLinks />
-              </FadeUpItem>
-            </div>
-          </FadeUpSection>
-        </section>
-
-        {/* ════════════════════════════════════════
-            FIELD MARK DIVIDER
-            ════════════════════════════════════════════ */}
-        <FieldMark />
-
-        {/* ═════════════════════════════════════════
-            GOOGLE MAPS LOCATION
-            ════════════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Find Us" title="Our Location" />
-            </FadeUpItem>
-            <FadeUpItem delay={0.15}>
-              <div className="relative w-full h-0 pb-[56.25%] overflow-hidden shadow-lg border border-brand-accent/25">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.959727272727!2d8.525!3d11.999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x11ae81f7c8c8c8c9%3A0x8c8c8c8c8c8c8c8c!2sKano%20Polo%20Club!5e0!3m2!1sen!2sng!4v1690000000000!5m2!1sen!2sng"
-                  className="absolute inset-0 w-full h-full border-0"
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Kano Polo Club Location"
+          <div className="mt-12 max-w-3xl mx-auto">
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <FAQItem 
+                  key={faq.id} 
+                  question={faq.question} 
+                  answer={faq.answer} 
                 />
-              </div>
-              <p className="text-center text-brand-text/60 text-sm mt-4">
-                Kano Polo Club, Kano State, Nigeria — easily accessible from the city center
-              </p>
-            </FadeUpItem>
-          </FadeUpSection>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {/* ═════════════════════════════════════════
+        {/* ═══════════════════════════════════════
+            FIELD MARK DIVIDER
+            ═════════════════════════════════════════════════ */}
+        <FieldMark />
+
+        {/* ════════════════════════════════════════
+            SOCIAL MEDIA
+            ═════════════════════════════════════ */}
+        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Stay Connected" title="Follow Us" />
+          </motion.div>
+
+          <div className="flex flex-col items-center gap-8">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.6, delay: 0, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <p className="text-center text-brand-text/60 max-w-xl">
+                Stay updated with the latest news, events, and behind-the-scenes content from Kano Polo Club.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <SocialLinks />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════
+            FIELD MARK DIVIDER
+            ═════════════════════════════════════════════════ */}
+        <FieldMark />
+
+        {/* ════════════════════════════════════════
+            GOOGLE MAPS LOCATION
+            ═════════════════════════════════════ */}
+        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Find Us" title="Our Location" />
+          </motion.div>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="relative w-full h-0 pb-[56.25%] overflow-hidden shadow-lg border border-brand-accent/25">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3901.959727272727!2d8.525!3d11.999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x11ae81f7c8c8c8c9%3A0x8c8c8c8c8c8c8c8c!2sKano%20Polo%20Club!5e0!3m2!1sen!2sng!4v1690000000000!5m2!1sen!2sng"
+                className="absolute inset-0 w-full h-full border-0"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Kano Polo Club Location"
+              />
+            </div>
+            <p className="text-center text-brand-text/60 text-sm mt-4">
+              Kano Polo Club, Kano State, Nigeria — easily accessible from the city center
+            </p>
+          </motion.div>
+        </section>
+
+        {/* ═══════════════════════════════════════
             FOOTER SPACER
-            ════════════════════════════════════════════ */}
+            ═════════════════════════════════════ */}
         <div className="h-8" />
       </main>
-    </PageWrapper>
+    </motion.div>
   );
 };
 

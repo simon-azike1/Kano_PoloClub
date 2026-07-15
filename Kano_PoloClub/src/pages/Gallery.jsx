@@ -1,13 +1,7 @@
 import { Link } from 'react-router-dom';
-import {
-  PageWrapper,
-  FadeUpSection,
-  FadeUpItem,
-  ScaleInItem,
-  SlideLeftItem,
-  SlideRightItem,
-} from '../components/animations';
+import { motion, useReducedMotion } from 'framer-motion';
 import { SocialLinks } from '../components/SocialIcons';
+import { FieldMark, SectionHeading } from '../components/ui';
 
 import gallery1 from '../assets/bg.jpg';
 import gallery2 from '../assets/bg (2).jpg';
@@ -20,14 +14,14 @@ import gallery8 from '../assets/bg (8).jpg';
 import gallery9 from '../assets/polo1.jpg';
 
 /* ──────────────────────────────────────────────
-   VIDEO CONFIG
-   ────────────────────────────────────────────── */
+    VIDEO CONFIG
+    ────────────────────────────────────────────── */
 
 const videoUrl = 'https://res.cloudinary.com/djizgbimn/video/upload/v1784066347/POLO_ywdgli.mp4';
 
 /* ──────────────────────────────────────────────
-   SVG ICONS
-   ────────────────────────────────────────────── */
+    SVG ICONS
+    ────────────────────────────────────────────── */
 
 const IconCrosshair = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,34 +69,8 @@ const IconPlay = () => (
 );
 
 /* ──────────────────────────────────────────────
-   SUB-LAYOUT COMPONENTS
-   ────────────────────────────────────────────── */
-
-const FieldMark = () => (
-  <div className="flex items-center justify-center gap-4 w-full py-8">
-    <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
-    <div className="text-brand-accent/60"><IconCrosshair /></div>
-    <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
-  </div>
-);
-
-const SectionHeading = ({ eyebrow, title }) => (
-  <div className="text-center mb-12 md:mb-16">
-    <span className="block text-xs md:text-sm font-sans font-medium tracking-[0.25em] uppercase text-brand-accent mb-3">
-      {eyebrow}
-    </span>
-    <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-normal text-brand-text leading-tight">
-      {title}
-    </h2>
-    <div className="mt-5 flex justify-center">
-      <div className="w-16 h-px bg-brand-accent/60" />
-    </div>
-  </div>
-);
-
-/* ──────────────────────────────────────────────
-   GALLERY DATA
-   ────────────────────────────────────────────── */
+    GALLERY DATA
+    ────────────────────────────────────────────── */
 
 const galleryImages = [
   {
@@ -231,310 +199,599 @@ const stories = [
 ];
 
 /* ──────────────────────────────────────────────
-   MAIN GALLERY COMPONENT
-   ────────────────────────────────────────────── */
+    MAIN GALLERY COMPONENT
+    ────────────────────────────────────────────── */
+
+// Helper to split text into spans for staggered animation
+const splitTextIntoSpans = (text, splitBy = 'word') => {
+  if (!text) return '';
+  if (splitBy === 'char') {
+    return text.split('').map((char, i) => (
+      <span key={i} style={{ display: 'inline-block' }}>
+        {char === ' ' ? '\u00A0' : char}
+      </span>
+    ));
+  }
+  // Default to word split
+  return text.split(' ').map((word, i) => (
+    <span key={i} style={{ display: 'inline-block', marginRight: i === text.split(' ').length - 1 ? 0 : '0.2em' }}>
+      {word}{i === text.split(' ').length - 1 ? '' : ' '}
+    </span>
+  ));
+};
 
 const Gallery = () => {
+  const reducedMotion = useReducedMotion();
+  const customEase = [0.16, 1, 0.3, 1];
+
   return (
-    <PageWrapper>
+    <motion.div>
       <main className="min-h-screen bg-brand-bg text-brand-text font-sans">
-        {/* ═══════════════════════════════════════════
+        {/* ═══════════════════════════════════════════════
             HERO SECTION
             ═══════════════════════════════════════════ */}
         <section className="relative min-h-[80vh] w-full overflow-hidden">
+          {/* Background image */}
           <div className="absolute inset-0">
-            <img
+            <motion.img
               src={gallery1}
               alt="Kano Polo Club gallery"
               className="w-full h-full object-cover"
+              initial={reducedMotion ? {} : { scale: 1.05 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, ease: customEase }}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-primary via-brand-primary/80 to-brand-primary/20" />
+            {/* Darker gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/20" />
           </div>
 
+          {/* Hero content */}
           <div className="relative z-10 flex flex-col justify-center h-full px-6 md:px-12 lg:px-20 py-16 max-w-7xl mx-auto">
-            <FadeUpSection className="max-w-3xl">
-              <FadeUpItem delay={0}>
-                <span className="inline-block text-xs md:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-4">
-                  Visual Journey
-                </span>
-              </FadeUpItem>
-              <FadeUpItem delay={0.15}>
-                <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-normal text-white leading-[1.1] mb-6">
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, ease: customEase }}
+            >
+              <div className="max-w-3xl">
+                {/* Est. 1950 */}
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.6, delay: 0, ease: customEase }}
+                >
+                  <span className="inline-block text-xs md:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-4">
+                    Est. 1950 — Northern Nigeria
+                  </span>
+                </motion.div>
+
+                {/* Headline */}
+                <motion.h1
+                  className="font-serif text-4xl md:text-6xl lg:text-7xl font-normal text-white leading-[1.1] mb-6"
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 1.2, delay: 0.15, ease: customEase }}
+                >
                   Gallery, Videos & Stories
-                </h1>
-              </FadeUpItem>
-              <FadeUpItem delay={0.3}>
-                <p className="font-sans text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6">
+                </motion.h1>
+
+                {/* Subheadline */}
+                <motion.p
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
+                  className="font-sans text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6"
+                >
                   Explore our heritage through images and stories — seven decades of polo excellence captured in moments
-                </p>
-                <p className="font-sans text-sm md:text-base text-white/70 leading-relaxed max-w-xl mb-8">
+                </motion.p>
+
+                <motion.p
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.45, ease: customEase }}
+                  className="font-sans text-sm md:text-base text-white/70 leading-relaxed max-w-xl mb-8"
+                >
                   From championship matches to intimate club moments, every photograph tells a story of tradition, excellence, and community
-                </p>
-                <div className="flex flex-wrap gap-6 mb-8 text-white/70">
-                  <div className="flex items-center gap-2">
+                </motion.p>
+
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, delay: 0.6, ease: customEase }}
+                  className="flex flex-wrap gap-6 mb-8 text-white/70"
+                >
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0, ease: customEase }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <span className="text-brand-accent">◆</span>
                     <span className="text-sm">9 Curated Photo Galleries</span>
-                  </div>
-                  <div className="flex items-center gap-2">
+                  </motion.div>
+                  <motion.div
+                    initial={{ x: 20, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <span className="text-brand-accent">◆</span>
                     <span className="text-sm">6 Heritage Stories</span>
-                  </div>
-                  <div className="flex items-center gap-2">
+                  </motion.div>
+                  <motion.div
+                    initial={{ x: 0, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.6, delay: 0.3, ease: customEase }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
                     <span className="text-brand-accent">◆</span>
                     <span className="text-sm">70+ Years of History</span>
+                  </motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ═════════════════════════════════════════════
+            FIELD MARK DIVIDER
+            ═══════════════════════════════════════════════ */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: customEase }}
+        >
+          <div className="flex items-center justify-center gap-4 w-full py-8">
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+            <div className="text-brand-accent/60">
+              <IconCrosshair />
+            </div>
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+          </div>
+        </motion.div>
+
+        {/* ═════════════════════════════════════════════
+            PHOTO GALLERY GRID
+            ═════════════════════════════════════════ */}
+        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Moments Captured" title="Photo Gallery" />
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-12">
+            {galleryImages.map((image, index) => (
+              <motion.div
+                key={image.id}
+                initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8, delay: index * 0.1, ease: customEase }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
+              >
+                <div className="relative aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-brand-primary">
+                  <motion.img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    initial={reducedMotion ? {} : { scale: 1.05 }}
+                    whileInView={{ scale: 1 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.8, ease: customEase }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                    <span className="inline-block text-xs font-sans font-medium tracking-[0.15em] uppercase text-brand-accent mb-2">
+                      {image.category}
+                    </span>
+                    <h3 className="font-serif text-lg md:text-xl text-white mb-2">
+                      {image.title}
+                    </h3>
+                    <p className="font-sans text-sm text-white/80 leading-relaxed">
+                      {image.description}
+                    </p>
+                  </div>
+                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-10 h-10 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary">
+                      <motion.svg
+                        width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <path d="M5 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.5" />
+                      </motion.svg>
+                    </div>
                   </div>
                 </div>
-              </FadeUpItem>
-            </FadeUpSection>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════
+            FIELD MARK DIVIDER
+            ═════════════════════════════════════════ */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: customEase }}
+        >
+          <div className="flex items-center justify-center gap-4 w-full py-8">
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+            <div className="text-brand-accent/60">
+              <IconCrosshair />
+            </div>
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+          </div>
+        </motion.div>
+
+        {/* ════════════════════════════════════════════
+            VIDEO GALLERY SECTION
+            ═════════════════════════════════════════ */}
+        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Visual Journey" title="Video Gallery" />
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+            {/* Video 1 - Main Featured */}
+            <motion.div
+              key="video-1"
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="md:col-span-2 lg:col-span-2"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
+                <motion.video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={gallery1}
+                  initial={reducedMotion ? {} : { scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease: customEase }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </motion.video>
+                <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
+                  <motion.div
+                    className="w-20 h-20 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <IconPlay />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Video 2 */}
+            <motion.div
+              key="video-2"
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
+                <motion.video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={gallery2}
+                  initial={reducedMotion ? {} : { scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease: customEase }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </motion.video>
+                <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <IconPlay />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Video 3 */}
+            <motion.div
+              key="video-3"
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
+                <motion.video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={gallery3}
+                  initial={reducedMotion ? {} : { scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease: customEase }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </motion.video>
+                <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <IconPlay />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Video 4 */}
+            <motion.div
+              key="video-4"
+              initial={{ x: 100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
+                <motion.video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={gallery4}
+                  initial={reducedMotion ? {} : { scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease: customEase }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </motion.video>
+                <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <IconPlay />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Video 5 */}
+            <motion.div
+              key="video-5"
+              initial={{ x: -100, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: customEase }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
+                <motion.video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                  poster={gallery5}
+                  initial={reducedMotion ? {} : { scale: 1.05 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.8, ease: customEase }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </motion.video>
+                <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
+                  <motion.div
+                    className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <IconPlay />
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
         {/* ═══════════════════════════════════════════
             FIELD MARK DIVIDER
-            ═══════════════════════════════════════════ */}
-        <FieldMark />
-
-        {/* ═══════════════════════════════════════════
-            PHOTO GALLERY GRID
-            ═══════════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Moments Captured" title="Photo Gallery" />
-            </FadeUpItem>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-12">
-              {galleryImages.map((image, index) => (
-                <ScaleInItem key={image.id} delay={index * 0.1}>
-                  <div className="group relative aspect-[4/5] md:aspect-[3/4] overflow-hidden bg-brand-primary">
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-primary/90 via-brand-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                      <span className="inline-block text-xs font-sans font-medium tracking-[0.15em] uppercase text-brand-accent mb-2">
-                        {image.category}
-                      </span>
-                      <h3 className="font-serif text-lg md:text-xl text-white mb-2">
-                        {image.title}
-                      </h3>
-                      <p className="font-sans text-sm text-white/80 leading-relaxed">
-                        {image.description}
-                      </p>
-                    </div>
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-10 h-10 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary">
-                        <IconCamera className="h-5 w-5" />
-                      </div>
-                    </div>
-                  </div>
-                </ScaleInItem>
-              ))}
+            ═════════════════════════════════════════ */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: customEase }}
+        >
+          <div className="flex items-center justify-center gap-4 w-full py-8">
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+            <div className="text-brand-accent/60">
+              <IconCrosshair />
             </div>
-          </FadeUpSection>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-            FIELD MARK DIVIDER
-            ═══════════════════════════════════════════ */}
-        <FieldMark />
-
-        {/* ═══════════════════════════════════════════
-            VIDEO GALLERY SECTION
-            ═══════════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Visual Journey" title="Video Gallery" />
-            </FadeUpItem>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-              {/* Video 1 - Main Featured */}
-              <ScaleInItem delay={0} className="md:col-span-2 lg:col-span-2">
-                <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster={gallery1}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
-                    <div className="w-20 h-20 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300">
-                      <IconPlay />
-                    </div>
-                  </div>
-                </div>
-              </ScaleInItem>
-
-              {/* Video 2 */}
-              <ScaleInItem delay={0.1}>
-                <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster={gallery2}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
-                    <div className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300">
-                      <IconPlay />
-                    </div>
-                  </div>
-                </div>
-              </ScaleInItem>
-
-              {/* Video 3 */}
-              <ScaleInItem delay={0.2}>
-                <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster={gallery3}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
-                    <div className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300">
-                      <IconPlay />
-                    </div>
-                  </div>
-                </div>
-              </ScaleInItem>
-
-              {/* Video 4 */}
-              <ScaleInItem delay={0.3}>
-                <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster={gallery4}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
-                    <div className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300">
-                      <IconPlay />
-                    </div>
-                  </div>
-                </div>
-              </ScaleInItem>
-
-              {/* Video 5 */}
-              <ScaleInItem delay={0.4}>
-                <div className="relative aspect-[16/9] overflow-hidden bg-brand-primary">
-                  <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover"
-                    poster={gallery5}
-                  >
-                    <source src={videoUrl} type="video/mp4" />
-                  </video>
-                  <div className="absolute inset-0 flex items-center justify-center bg-brand-primary/20 group-hover:bg-brand-primary/10 transition-colors duration-300">
-                    <div className="w-16 h-16 rounded-full bg-brand-accent/90 flex items-center justify-center text-brand-primary group-hover:scale-110 transition-transform duration-300">
-                      <IconPlay />
-                    </div>
-                  </div>
-                </div>
-              </ScaleInItem>
-            </div>
-          </FadeUpSection>
-        </section>
-
-        {/* ═══════════════════════════════════════════
-            FIELD MARK DIVIDER
-            ═══════════════════════════════════════════ */}
-        <FieldMark />
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+          </div>
+        </motion.div>
 
         {/* ═══════════════════════════════════════════
             STORIES SECTION
-            ═══════════════════════════════════════════ */}
+            ════════════════════════════════════════ */}
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
-            <FadeUpItem>
-              <SectionHeading eyebrow="Our Journey" title="Stories & Heritage" />
-            </FadeUpItem>
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
+            <SectionHeading eyebrow="Our Journey" title="Stories & Heritage" />
+          </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-              {stories.map((story, index) => (
-                <FadeUpItem key={story.id} delay={index * 0.15}>
-                  <div className="group relative p-6 md:p-8 bg-white border border-brand-accent/25 transition-all duration-500 hover:border-brand-accent/50 hover:shadow-lg hover:shadow-brand-accent/5">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-lg bg-brand-accent/10 flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-brand-primary transition-all duration-300">
-                        {story.icon}
-                      </div>
-                      <div>
-                        <span className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-brand-accent">
-                          {story.category}
-                        </span>
-                        <span className="ml-3 text-xs text-brand-text/50">{story.year}</span>
-                      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+            {stories.map((story, index) => (
+              <motion.div
+                key={story.id}
+                initial={{ x: index % 2 === 0 ? -100 : 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8, delay: index * 0.15, ease: customEase }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="group"
+              >
+                <div className="relative p-6 md:p-8 bg-white border border-brand-accent/25 transition-all duration-500 hover:border-brand-accent/50 hover:shadow-lg hover:shadow-brand-accent/5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-lg bg-brand-accent/10 flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-brand-primary transition-all duration-300">
+                      {story.icon}
                     </div>
-                    <h3 className="font-serif text-xl md:text-2xl text-brand-text mb-4 group-hover:text-brand-primary transition-colors duration-300">
-                      {story.title}
-                    </h3>
-                    <p className="font-sans text-sm md:text-base text-brand-text/70 leading-relaxed">
-                      {story.excerpt}
-                    </p>
-                    <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-brand-accent/0 group-hover:border-brand-accent/40 transition-all duration-500" />
-                    <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-brand-accent/0 group-hover:border-brand-accent/40 transition-all duration-500" />
+                    <div>
+                      <span className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-brand-accent">
+                        {story.category}
+                      </span>
+                      <span className="ml-3 text-xs text-brand-text/50">{story.year}</span>
+                    </div>
                   </div>
-                </FadeUpItem>
-              ))}
-            </div>
-          </FadeUpSection>
+                  <h3 className="font-serif text-xl md:text-2xl text-brand-text mb-4 group-hover:text-brand-primary transition-colors duration-300">
+                    {story.title}
+                  </h3>
+                  <p className="font-sans text-sm md:text-base text-brand-text/70 leading-relaxed">
+                    {story.excerpt}
+                  </p>
+                  <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-brand-accent/0 group-hover:border-brand-accent/40 transition-all duration-500" />
+                  <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-brand-accent/0 group-hover:border-brand-accent/40 transition-all duration-500" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </section>
 
         {/* ═══════════════════════════════════════════
             FIELD MARK DIVIDER
-            ═══════════════════════════════════════════ */}
-        <FieldMark />
+            ═════════════════════════════════════════ */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.8, ease: customEase }}
+        >
+          <div className="flex items-center justify-center gap-4 w-full py-8">
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+            <div className="text-brand-accent/60">
+              <IconCrosshair />
+            </div>
+            <div className="h-px flex-1 max-w-[120px] bg-brand-accent/40" />
+          </div>
+        </motion.div>
 
         {/* ═══════════════════════════════════════════
             CTA SECTION
-            ═══════════════════════════════════════════ */}
+            ════════════════════════════════════════ */}
         <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
-          <FadeUpSection>
+          <motion.div
+            initial={{ y: 40, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: customEase }}
+          >
             <div className="relative bg-brand-bg border border-brand-accent/30 p-8 md:p-12 lg:p-16">
               <div className="absolute top-4 left-4 right-4 h-px bg-brand-accent/20" />
               <div className="absolute bottom-4 left-4 right-4 h-px bg-brand-accent/20" />
               <div className="absolute top-4 bottom-4 left-4 w-px bg-brand-accent/20" />
               <div className="absolute top-4 bottom-4 right-4 w-px bg-brand-accent/20" />
 
-              <FadeUpItem>
-                <div className="text-center mb-12">
-                  <span className="block text-xs md:text-sm font-sans font-medium tracking-[0.25em] uppercase text-brand-accent mb-3">
-                    Experience It Yourself
-                  </span>
-                  <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-normal text-brand-text leading-tight mb-4">
-                    Create Your Own Story
-                  </h2>
-                  <p className="font-sans text-base md:text-lg text-brand-text/70 leading-relaxed max-w-2xl mx-auto">
-                    Every visit to Kano Polo Club adds a new chapter to our shared history. Whether you're a seasoned player or discovering polo for the first time, your story awaits.
-                  </p>
-                </div>
-              </FadeUpItem>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8, delay: 0, ease: customEase }}
+                className="text-center mb-12"
+              >
+                <span className="block text-xs md:text-sm font-sans font-medium tracking-[0.25em] uppercase text-brand-accent mb-3">
+                  Experience It Yourself
+                </span>
+                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-normal text-brand-text leading-tight mb-4">
+                  Create Your Own Story
+                </h2>
+                <p className="font-sans text-base md:text-lg text-brand-text/70 leading-relaxed max-w-2xl mx-auto">
+                  Every visit to Kano Polo Club adds a new chapter to our shared history. Whether you're a seasoned player or discovering polo for the first time, your story awaits.
+                </p>
+              </motion.div>
 
-              <FadeUpItem delay={0.3}>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98, y: 0 }}
+                >
                   <Link
                     to="/club"
                     className="inline-flex items-center gap-2 px-8 py-3 bg-brand-primary text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-text"
@@ -542,6 +799,11 @@ const Gallery = () => {
                     Explore The Club
                     <IconArrowRight />
                   </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98, y: 0 }}
+                >
                   <Link
                     to="/membership"
                     className="inline-flex items-center gap-2 px-8 py-3 border border-brand-text/20 text-brand-text font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:border-brand-text/40 hover:bg-white"
@@ -549,22 +811,28 @@ const Gallery = () => {
                     Become a Member
                     <IconArrowRight />
                   </Link>
-                </div>
-              </FadeUpItem>
+                </motion.div>
+              </motion.div>
 
-              <FadeUpItem delay={0.45}>
-                <SocialLinks className="flex items-center justify-center gap-4" />
-              </FadeUpItem>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.8, delay: 0.45, ease: customEase }}
+                className="flex items-center justify-center gap-4"
+              >
+                <SocialLinks />
+              </motion.div>
             </div>
-          </FadeUpSection>
+          </motion.div>
         </section>
 
         {/* ═══════════════════════════════════════════
             FOOTER SPACER
-            ═══════════════════════════════════════════ */}
+            ════════════════════════════════════════ */}
         <div className="h-8" />
       </main>
-    </PageWrapper>
+    </motion.div>
   );
 };
 

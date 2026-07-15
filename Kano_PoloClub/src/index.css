@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+
 @theme {
   /* Brand Colors */
   --color-brand-primary: #6b1d2f;   
@@ -11,4 +12,8 @@
   /* Typography / Fonts */
   --font-serif: "Playfair Display", "Georgia", serif; 
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
+}
+
+html{
+  scroll-behavior: smooth;
 }

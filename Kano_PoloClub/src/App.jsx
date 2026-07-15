@@ -11,6 +11,7 @@ import News from './pages/News';
 import Contact from './pages/Contact';
 import Gallery from './pages/Gallery';
 import Membership from './pages/Membership';
+import Tournament from './pages/Tournament';
 
 
 const pageVariants = {
@@ -32,15 +33,17 @@ function AnimatedRoutes() {
         exit="exit"
       >
 <Routes location={location}>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/club" element={<Club />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/membership" element={<Membership />} />
-          </Routes>
+             <Route path="/" element={<Home />} />
+             <Route path="/about" element={<About />} />
+             <Route path="/club" element={<Club />} />
+             <Route path="/events" element={<Events />} />
+             <Route path="/news" element={<News />} />
+             <Route path="/contact" element={<Contact />} />
+             <Route path="/gallery" element={<Gallery />} />
+             <Route path="/membership" element={<Membership />} />
+             <Route path="/news" element={<News />} />
+             <Route path="/tournament" element={<Tournament />} />
+           </Routes>
       </motion.div>
     </AnimatePresence>
   );
