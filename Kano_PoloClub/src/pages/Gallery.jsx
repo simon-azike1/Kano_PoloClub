@@ -13,44 +13,39 @@ import gallery6 from '../assets/bg (6).jpg';
 import gallery7 from '../assets/bg (7).jpg';
 import gallery8 from '../assets/bg (8).jpg';
 import gallery9 from '../assets/polo1.jpg';
-import menUpdates from '../assets/menUpdates.mp4';
-import heighLights from '../assets/heighLights.mp4';
-import ladyPerform from '../assets/ladyPerform.mp4';
-import menPerform from '../assets/menPerform.mp4';
-import menPerform2 from '../assets/menPerform2.mp4';
 
 /* ──────────────────────────────────────────────
-     VIDEO CONFIG (Local asset videos)
+     VIDEO CONFIG (External Cloudinary URLs)
      ────────────────────────────────────────────── */
 
 const videoItems = [
   {
     id: 'video-1',
-    url: menUpdates,
+    url: 'https://res.cloudinary.com/djizgbimn/video/upload/v1784293226/SnapInsta.to_AQOIsXp_s0_BAeneu9KU_lK7NU9htO2T1SW-xLNOPTg5-QSsxc789hExWqSLGuzt5gq7vmSdknjTa3PiUULshBIrzraPmquXfIyTwS4_dsgrmb.mp4',
     poster: gallery1,
     title: 'Kano Polo Cup Action'
   },
   {
     id: 'video-2',
-    url: heighLights,
+    url: 'https://res.cloudinary.com/djizgbimn/video/upload/v1784293217/heighLights_kluc1w.mp4',
     poster: gallery2,
     title: 'Highlights Reel'
   },
   {
     id: 'video-3',
-    url: ladyPerform,
+    url: 'https://res.cloudinary.com/djizgbimn/video/upload/v1784293225/ladyPerform_dciwxc.mp4',
     poster: gallery3,
     title: "Ladies' Performance"
   },
   {
     id: 'video-4',
-    url: menPerform,
+    url: 'https://res.cloudinary.com/djizgbimn/video/upload/v1784293226/SnapInsta.to_AQOIsXp_s0_BAeneu9KU_lK7NU9htO2T1SW-xLNOPTg5-QSsxc789hExWqSLGuzt5gq7vmSdknjTa3PiUULshBIrzraPmquXfIyTwS4_dsgrmb.mp4',
     poster: gallery4,
     title: "Men's Performance"
   },
   {
     id: 'video-5',
-    url: menPerform2,
+    url: 'https://res.cloudinary.com/djizgbimn/video/upload/v1784293224/menPerform2_bxym9h.mp4',
     poster: gallery5,
     title: "Men's Performance 2"
   }
@@ -646,6 +641,8 @@ const Gallery = () => {
                     poster={video.poster}
                     muted={mutedStates[video.id]}
                     playsInline
+                    preload="metadata"
+                    crossOrigin="anonymous"
                     onPlay={() => setPlayingStates(prev => ({ ...prev, [video.id]: true }))}
                     onPause={() => setPlayingStates(prev => ({ ...prev, [video.id]: false }))}
                     onEnded={() => setPlayingStates(prev => ({ ...prev, [video.id]: false }))}
