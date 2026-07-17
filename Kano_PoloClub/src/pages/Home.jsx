@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import heroImage from '../assets/bg (6).jpg';
-import heroVideo from '../assets/bg_video.mp4'
+import heroVideo from '../assets/menPerform.mp4'
 import heritageImage from '../assets/bg.jpg';
 import { FieldMark, SectionHeading } from '../components/ui';
 import { IconCrosshair, IconPoloField, IconClubhouse, IconAcademy, IconStables, IconAccess, IconEvents, IconCoaching, IconSocial, IconArrowRight, IconCalendar } from '../components/icons';
