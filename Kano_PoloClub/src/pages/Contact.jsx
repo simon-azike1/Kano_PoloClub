@@ -8,24 +8,6 @@ import heritageImage from '../assets/bg.jpg';
 // Custom ease for premium feel
 const customEase = [0.16, 1, 0.3, 1];
 
-// Helper to split text into spans for staggered animation
-const splitTextIntoSpans = (text, splitBy = 'word') => {
-  if (!text) return '';
-  if (splitBy === 'char') {
-    return text.split('').map((char, i) => (
-      <span key={i} style={{ display: 'inline-block' }}>
-        {char === ' ' ? '\u00A0' : char}
-      </span>
-    ));
-  }
-  // Default to word split
-  return text.split(' ').map((word, i) => (
-    <span key={i} style={{ display: 'inline-block', marginRight: i === text.split(' ').length - 1 ? 0 : '0.2em' }}>
-      {word}{i === text.split(' ').length - 1 ? '' : ' '}
-    </span>
-  ));
-};
-
 const IconCrosshair = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="12" cy="12" r="2" fill="currentColor" />
@@ -78,12 +60,6 @@ const IconClock = () => (
   </svg>
 );
 
-const IconChevronDown = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 7L10 12L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -93,35 +69,29 @@ const FAQItem = ({ question, answer }) => {
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.6, ease: customEase }}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
     >
-      <div className="group relative p-6 bg-white border border-brand-accent/25 overflow-hidden transition-all duration-500 hover:border-brand-accent/60 hover:shadow-lg hover:shadow-brand-accent/5">
-        <motion.button
+      <div className="group relative bg-white border border-brand-accent/25 overflow-hidden transition-all duration-500 hover:border-brand-accent/60 hover:shadow-lg hover:shadow-brand-accent/5">
+        <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-6 py-5 flex items-center justify-between text-left focus:outline-none"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          className="w-full px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-between text-left focus:outline-none"
         >
-          <h3 className="font-serif text-lg text-brand-text pr-4 group-hover:text-brand-primary transition-colors duration-300">
+          <h3 className="font-serif text-base sm:text-lg text-brand-text pr-4 group-hover:text-brand-primary transition-colors duration-300">
             {question}
           </h3>
-          <motion.svg
+          <svg
             className={`flex-shrink-0 h-5 w-5 text-brand-accent transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
             width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
           >
             <path d="M5 7L10 12L15 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </motion.svg>
-        </motion.button>
+          </svg>
+        </button>
         <motion.div
           initial={{ height: 0, opacity: 0 }}
-          whileInView={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+          animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
           transition={{ height: { duration: 0.3, ease: customEase }, opacity: { duration: 0.3, ease: customEase } }}
           className="overflow-hidden"
         >
-          <div className={`px-6 pb-5 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="px-4 pb-4 sm:px-6 sm:pb-5">
             <p className="font-sans text-sm text-brand-text/70 leading-relaxed border-t border-brand-accent/10 pt-4">
               {answer}
             </p>
@@ -179,10 +149,6 @@ const faqs = [
   }
 ];
 
-/* ──────────────────────────────────────────────
-    SUB-LAYOUT COMPONENTS
-    ────────────────────────────────────────────── */
-
 const FieldMark = () => (
   <motion.div
     initial={{ y: 10, opacity: 0 }}
@@ -221,10 +187,6 @@ const SectionHeading = ({ eyebrow, title }) => (
   </motion.div>
 );
 
-/* ──────────────────────────────────────────────
-    MAIN CONTACT COMPONENT
-    ────────────────────────────────────────────── */
-
 const Contact = () => {
   const reducedMotion = useReducedMotion();
   const [formState, setFormState] = useState({
@@ -241,12 +203,10 @@ const Contact = () => {
     e.preventDefault();
     setFormState(prev => ({ ...prev, submitting: true, error: null }));
     
-    // Simulate form submission
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       setFormState(prev => ({ ...prev, submitting: false, success: true }));
       
-      // Reset form after success
       setTimeout(() => {
         setFormState({
           name: '',
@@ -266,10 +226,8 @@ const Contact = () => {
   return (
     <motion.div>
       <main className="min-h-screen bg-brand-bg text-brand-text font-sans">
-        {/* ═════════════════════════════════════════
-            HERO SECTION
-            ═════════════════════════════════════════════════ */}
-        <section className="relative h-[85vh] w-full overflow-hidden">
+        {/* HERO SECTION */}
+        <section className="relative min-h-[80vh] sm:min-h-[85vh] lg:min-h-[calc(100dvh-4rem)] w-full overflow-hidden flex items-end">
           {/* Background image */}
           <div className="absolute inset-0">
             <motion.img
@@ -286,7 +244,7 @@ const Contact = () => {
           </div>
 
           {/* Hero content */}
-          <div className="relative z-10 flex flex-col justify-end h-full px-6 md:px-12 lg:px-20 pb-16 md:pb-24 max-w-7xl mx-auto">
+          <div className="relative z-10 w-full px-4 sm:px-6 md:px-12 lg:px-20 pb-12 sm:pb-16 md:pb-24 max-w-7xl mx-auto">
             <motion.div
               initial={{ y: 40, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -301,20 +259,35 @@ const Contact = () => {
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.6, delay: 0, ease: customEase }}
                 >
-                  <span className="inline-block text-xs md:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-4">
+                  <span className="inline-block text-xs sm:text-sm font-sans font-medium tracking-[0.3em] uppercase text-brand-accent mb-3 sm:mb-4">
                     Est. 1950 — Northern Nigeria
                   </span>
                 </motion.div>
 
                 {/* Headline */}
                 <motion.h1
-                  className="font-serif text-4xl md:text-6xl lg:text-7xl font-normal text-white leading-[1.1] mb-6"
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
+                  className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal text-white leading-[1.1] mb-4 sm:mb-6 flex flex-wrap"
+                  initial="hidden"
+                  whileInView="visible"
                   viewport={{ once: true, amount: 0.15 }}
-                  transition={{ duration: 1.2, delay: 0.15, ease: customEase }}
                 >
-                  Contact Us
+                  {'Contact Us'.split(' ').map((word, index, arr) => (
+                    <motion.span
+                      key={index}
+                      className="inline-block"
+                      variants={{
+                        hidden: { y: 20, opacity: 0 },
+                        visible: {
+                          y: 0,
+                          opacity: 1,
+                          transition: { duration: 1.2, delay: index * 0.05, ease: customEase }
+                        }
+                      }}
+                      style={{ marginRight: index === arr.length - 1 ? 0 : '0.25em' }}
+                    >
+                      {word}
+                    </motion.span>
+                  ))}
                 </motion.h1>
 
                 {/* Subheadline */}
@@ -323,27 +296,27 @@ const Contact = () => {
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
-                  className="font-sans text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6"
+                  className="font-sans text-sm sm:text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-6"
                 >
                   Whether you're interested in membership, have questions about our facilities, or want to book a visit, our team is here to help.
                 </motion.p>
 
+                {/* Contact Quick Details */}
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.8, delay: 0.45, ease: customEase }}
-                  className="flex flex-wrap items-center gap-6 text-white/70 text-sm mb-8"
+                  className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 text-white/70 text-sm mb-8"
                 >
                   <motion.div
                     initial={{ x: -20, opacity: 0 }}
                     whileInView={{ x: 0, opacity: 1 }}
                     viewport={{ once: true, amount: 0.15 }}
                     transition={{ duration: 0.6, delay: 0, ease: customEase }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center gap-2"
                   >
-                    <IconPhone className="h-5 w-5 text-brand-accent" />
+                    <IconPhone className="h-5 w-5 text-brand-accent flex-shrink-0" />
                     <span>+234 XXX XXX XXX</span>
                   </motion.div>
                   <motion.div
@@ -351,28 +324,29 @@ const Contact = () => {
                     whileInView={{ x: 0, opacity: 1 }}
                     viewport={{ once: true, amount: 0.15 }}
                     transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center gap-2"
                   >
-                    <IconEmail className="h-5 w-5 text-brand-accent" />
+                    <IconEmail className="h-5 w-5 text-brand-accent flex-shrink-0" />
                     <span>info@kanopoloclub.ng</span>
                   </motion.div>
                 </motion.div>
 
+                {/* Hero Buttons */}
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true, amount: 0.15 }}
                   transition={{ duration: 0.8, delay: 0.6, ease: customEase }}
-                  className="flex flex-wrap gap-4"
+                  className="flex flex-col sm:flex-row gap-3 sm:gap-4"
                 >
                   <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98, y: 0 }}
+                    className="w-full sm:w-auto"
                   >
                     <Link
                       to="/about"
-                      className="inline-flex items-center gap-2 px-7 py-3 bg-brand-accent text-brand-primary font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white hover:text-brand-primary"
+                      className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 bg-brand-accent text-brand-primary font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white hover:text-brand-primary min-h-[48px] touch-manipulation w-full sm:w-auto text-center"
                     >
                       Learn About Us
                       <IconArrowRight />
@@ -381,10 +355,11 @@ const Contact = () => {
                   <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98, y: 0 }}
+                    className="w-full sm:w-auto"
                   >
                     <Link
                       to="/club"
-                      className="inline-flex items-center gap-2 px-7 py-3 border border-white/40 text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white/10 hover:border-white/60"
+                      className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 border border-white/40 text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-white/10 hover:border-white/60 min-h-[48px] touch-manipulation w-full sm:w-auto text-center"
                     >
                       Explore The Club
                     </Link>
@@ -395,15 +370,11 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* ══════════════════════════════════════
-            FIELD MARK DIVIDER
-            ═════════════════════════════════════════════════ */}
+        {/* FIELD MARK DIVIDER */}
         <FieldMark />
 
-        {/* ════════════════════════════════════════
-            CONTACT INFORMATION
-            ══════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+        {/* CONTACT INFORMATION */}
+        <section className="px-4 sm:px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-24 max-w-7xl mx-auto">
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -413,15 +384,13 @@ const Contact = () => {
             <SectionHeading eyebrow="Get in Touch" title="Contact Information" />
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
             {/* Contact Form */}
             <motion.div
               initial={{ x: -100, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.8, ease: customEase }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <form
                 onSubmit={handleSubmit}
@@ -438,7 +407,7 @@ const Contact = () => {
                     value={formState.name}
                     onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
                     required
-                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 bg-white"
                     disabled={formState.submitting}
                   />
                 </div>
@@ -453,7 +422,7 @@ const Contact = () => {
                     value={formState.email}
                     onChange={(e) => setFormState(prev => ({ ...prev, email: e.target.value }))}
                     required
-                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 bg-white"
                     disabled={formState.submitting}
                   />
                 </div>
@@ -468,7 +437,7 @@ const Contact = () => {
                     value={formState.subject}
                     onChange={(e) => setFormState(prev => ({ ...prev, subject: e.target.value }))}
                     required
-                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300"
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 bg-white"
                     disabled={formState.submitting}
                   />
                 </div>
@@ -483,7 +452,7 @@ const Contact = () => {
                     onChange={(e) => setFormState(prev => ({ ...prev, message: e.target.value }))}
                     rows="5"
                     required
-                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 resize-none"
+                    className="shadow-sm w-full px-4 py-3 border border-brand-accent/25 focus:ring-2 focus:ring-brand-accent/50 focus:border-brand-accent/75 transition-all duration-300 resize-none bg-white"
                     disabled={formState.submitting}
                   />
                 </div>
@@ -491,14 +460,14 @@ const Contact = () => {
                   <motion.button
                     type="submit"
                     disabled={formState.submitting || formState.success}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-brand-primary text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-text"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-brand-primary text-white font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-text min-h-[48px] w-full sm:w-auto text-center"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     {formState.submitting ? 'Sending...' : 'Send Message'}
                     <IconArrowRight />
                   </motion.button>
-</div>
+                </div>
                 
                 <>
                 {formState.success && (
@@ -534,18 +503,16 @@ const Contact = () => {
               whileInView={{ x: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.8, delay: 0.2, ease: customEase }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <div className="space-y-6">
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
                       <IconLocation className="h-6 w-6 text-brand-accent" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                    <h3 className="font-serif text-lg text-brand-text mb-1">
                       Location
                     </h3>
                     <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
@@ -553,14 +520,14 @@ const Contact = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
                       <IconPhone className="h-6 w-6 text-brand-accent" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                    <h3 className="font-serif text-lg text-brand-text mb-1">
                       Phone
                     </h3>
                     <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
@@ -568,14 +535,14 @@ const Contact = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
                       <IconEmail className="h-6 w-6 text-brand-accent" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                    <h3 className="font-serif text-lg text-brand-text mb-1">
                       Email
                     </h3>
                     <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
@@ -583,14 +550,14 @@ const Contact = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 flex items-center justify-center bg-brand-accent/10 rounded-lg">
                       <IconClock className="h-6 w-6 text-brand-accent" />
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-serif text-lg text-brand-text mb-2">
+                    <h3 className="font-serif text-lg text-brand-text mb-1">
                       Hours
                     </h3>
                     <p className="font-sans text-sm text-brand-text/70 leading-relaxed">
@@ -603,15 +570,11 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════
-            FIELD MARK DIVIDER
-            ════════════════════════════════════════════════ */}
+        {/* FIELD MARK DIVIDER */}
         <FieldMark />
 
-        {/* ════════════════════════════════════════
-            FREQUENTLY ASKED QUESTIONS
-            ═════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+        {/* FREQUENTLY ASKED QUESTIONS */}
+        <section className="px-4 sm:px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-24 max-w-7xl mx-auto">
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -621,9 +584,9 @@ const Contact = () => {
             <SectionHeading eyebrow="Quick Answers" title="Frequently Asked Questions" />
           </motion.div>
 
-          <div className="mt-12 max-w-3xl mx-auto">
+          <div className="mt-8 sm:mt-12 max-w-3xl mx-auto">
             <div className="space-y-4">
-              {faqs.map((faq, index) => (
+              {faqs.map((faq) => (
                 <FAQItem 
                   key={faq.id} 
                   question={faq.question} 
@@ -634,15 +597,11 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════
-            FIELD MARK DIVIDER
-            ═════════════════════════════════════════════════ */}
+        {/* FIELD MARK DIVIDER */}
         <FieldMark />
 
-        {/* ════════════════════════════════════════
-            SOCIAL MEDIA
-            ═════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+        {/* SOCIAL MEDIA */}
+        <section className="px-4 sm:px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-24 max-w-7xl mx-auto">
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -653,40 +612,27 @@ const Contact = () => {
           </motion.div>
 
           <div className="flex flex-col items-center gap-8">
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.6, delay: 0, ease: customEase }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <p className="text-center text-brand-text/60 max-w-xl">
+            <div>
+              <p className="text-center text-brand-text/60 max-w-xl text-sm sm:text-base leading-relaxed">
                 Stay updated with the latest news, events, and behind-the-scenes content from Kano Polo Club.
               </p>
-            </motion.div>
+            </div>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
             >
               <SocialLinks />
             </motion.div>
           </div>
         </section>
 
-        {/* ═══════════════════════════════════════
-            FIELD MARK DIVIDER
-            ═════════════════════════════════════════════════ */}
+        {/* FIELD MARK DIVIDER */}
         <FieldMark />
 
-        {/* ════════════════════════════════════════
-            GOOGLE MAPS LOCATION
-            ═════════════════════════════════════ */}
-        <section className="px-6 md:px-12 lg:px-20 py-16 md:py-24 max-w-7xl mx-auto">
+        {/* GOOGLE MAPS LOCATION */}
+        <section className="px-4 sm:px-6 md:px-12 lg:px-20 py-12 sm:py-16 md:py-24 max-w-7xl mx-auto">
           <motion.div
             initial={{ y: 40, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
@@ -700,8 +646,6 @@ const Contact = () => {
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true, amount: 0.15 }}
             transition={{ duration: 0.6, delay: 0.15, ease: customEase }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
           >
             <div className="relative w-full h-0 pb-[56.25%] overflow-hidden shadow-lg border border-brand-accent/25">
               <iframe
@@ -713,16 +657,14 @@ const Contact = () => {
                 title="Kano Polo Club Location"
               />
             </div>
-            <p className="text-center text-brand-text/60 text-sm mt-4">
+            <p className="text-center text-brand-text/60 text-xs sm:text-sm mt-4">
               Kano Polo Club, Kano State, Nigeria — easily accessible from the city center
             </p>
           </motion.div>
         </section>
 
-        {/* ═══════════════════════════════════════
-            FOOTER SPACER
-            ═════════════════════════════════════ */}
-        <div className="h-8" />
+        {/* FOOTER SPACER */}
+        <div className="h-4 sm:h-8" />
       </main>
     </motion.div>
   );
