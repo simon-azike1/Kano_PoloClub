@@ -313,13 +313,13 @@ const Events = () => {
                       </p>
                     </div>
                     <div>
-                      <Link
+                      {/* <Link
                         to="/events/kano-polo-cup-2026"
                         className="mt-4 inline-flex items-center gap-2 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase hover:underline min-h-[32px]"
                       >
                         View Details
                         <IconArrowRight />
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
@@ -367,13 +367,13 @@ const Events = () => {
                       </p>
                     </div>
                     <div>
-                      <Link
+                      {/* <Link
                         to="/events/international-friendly-series"
                         className="mt-4 inline-flex items-center gap-2 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase hover:underline min-h-[32px]"
                       >
                         View Details
                         <IconArrowRight />
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
@@ -421,13 +421,13 @@ const Events = () => {
                       </p>
                     </div>
                     <div>
-                      <Link
+                      {/* <Link
                         to="/events/members-summer-gala"
                         className="mt-4 inline-flex items-center gap-2 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase hover:underline min-h-[32px]"
                       >
                         View Details
                         <IconArrowRight />
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
@@ -475,13 +475,13 @@ const Events = () => {
                       </p>
                     </div>
                     <div>
-                      <Link
+                      {/* <Link
                         to="/events/junior-polo-tournament"
                         className="mt-4 inline-flex items-center gap-2 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase hover:underline min-h-[32px]"
                       >
                         View Details
                         <IconArrowRight />
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>
@@ -498,13 +498,13 @@ const Events = () => {
                 viewport={{ once: true, amount: 0.15 }}
                 transition={{ duration: 0.6, delay: 0.4, ease: customEase }}
               >
-                <Link
+                {/* <Link
                   to="/events"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-brand-accent/40 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:bg-brand-accent hover:text-brand-primary min-h-[48px] w-full sm:w-auto text-center"
                 >
                   View Full Calendar
                   <IconArrowRight />
-                </Link>
+                </Link> */}
               </motion.div>
             </div>
           </div>

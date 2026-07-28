@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import Gallery from './pages/Gallery';
 import Membership from './pages/Membership';
 import Tournament from './pages/Tournament';
+import Palazzo from './pages/Palazzo';
 
 
 const pageVariants = {
@@ -39,6 +40,7 @@ function AnimatedRoutes() {
              <Route path="/events" element={<Events />} />
              <Route path="/news" element={<News />} />
              <Route path="/contact" element={<Contact />} />
+             <Route path="/palazzo" element={<Palazzo />} />
              <Route path="/gallery" element={<Gallery />} />
              <Route path="/membership" element={<Membership />} />
              <Route path="/news" element={<News />} />

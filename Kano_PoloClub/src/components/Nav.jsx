@@ -6,11 +6,12 @@ import logo from '/KPC_LOGO.png';
 const links = [
   { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
-  { to: '/club', label: 'The Club' },
+  // { to: '/club', label: 'The Club' },
   { to: '/events', label: 'Events' },
-  { to: '/tournament', label: 'Tournament' },
-  { to: '/news', label: 'News' },
+  // { to: '/tournament', label: 'Tournament' },
+  // { to: '/news', label: 'News' },
   { to: '/gallery', label: 'Gallery' },
+  { to: '/palazzo', label: 'Palazzo' },
   { to: '/contact', label: 'Contact' },
 ];
 

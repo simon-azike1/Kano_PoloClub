@@ -15,7 +15,7 @@ const splitTextIntoSpans = (text, splitBy = 'word') => {
   if (splitBy === 'char') {
     return text.split('').map((char, i) => (
       <span key={i} style={{ display: 'inline-block' }}>
-        {char === ' ' ? '\u00A0' : char}
+        {char === ' ' ? '\u00A0' : char} 
       </span>
     ));
   }
@@ -383,13 +383,13 @@ export default function Home() {
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className="flex-shrink-0">
-                      <Link
+                      {/* <Link
                         to={event.link}
                         className="inline-flex items-center gap-2 text-brand-accent font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 hover:gap-3 touch-manipulation"
                       >
                         Details
                         <IconArrowRight />
-                      </Link>
+                      </Link> */}
                     </div>
                   </motion.div>
                 </div>

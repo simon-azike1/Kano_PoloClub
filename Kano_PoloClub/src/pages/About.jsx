@@ -102,7 +102,7 @@ const About = () => {
                   transition={{ duration: 0.8, delay: 0.3, ease: customEase }}
                   className="font-sans text-sm sm:text-base md:text-lg text-white/80 leading-relaxed max-w-xl mb-3 sm:mb-4"
                 >
-                  Kano Polo Club is one of Nigeria's oldest and most storied sporting institutions, tracing its roots back to 1928. It emerged as part of a wave of polo clubs founded across northern Nigeria in the 1920s — alongside Katsina, Zaria, and Kaduna — as the "Game of Kings" took hold among the region's royal houses and elite.
+                  Kano Polo Club is one of Nigeria's oldest and most storied sporting institutions, tracing its roots back to 1928. It emerged as part of a wave of polo clubs founded across northern Nigeria in the 1920s, alongside Katsina, Zaria, and Kaduna, as the "Game of Kings" took hold among the region's royal houses and elite.
                 </motion.p>
 
                 {/* Buttons */}
@@ -166,10 +166,10 @@ const About = () => {
               </h2>
               <div className="w-10 sm:w-12 h-px bg-brand-accent/60 mb-4 sm:mb-6" />
               <p className="font-sans text-sm sm:text-base md:text-lg text-brand-text/80 leading-relaxed mb-4 sm:mb-5">
-                Today, Kano Polo Club stands as the premier polo centre in Kano State — a place where sport, tradition, and community come together. Set against the backdrop of the ancient city, the club has built a reputation for producing top-tier talent and hosting fiercely competitive matches that draw players and spectators from across Nigeria and abroad.
+                Today, Kano Polo Club stands as the premier polo centre in Kano State, place where sport, tradition, and community come together. Set against the backdrop of the ancient city, the club has built a reputation for producing top-tier talent and hosting fiercely competitive matches that draw players and spectators from across Nigeria and abroad.
               </p>
               <p className="font-sans text-sm sm:text-base md:text-lg text-brand-text/80 leading-relaxed mb-6 sm:mb-8">
-                Beyond competition, Kano Polo Club is a social and cultural hub. Members and visitors gather to play, unwind, and take in the action, with the club grounds offering a relaxed setting to enjoy the game, connect with fellow enthusiasts, and experience the hospitality the club is known for — including local food, drinks, and entertainment on match days and evenings.
+                Beyond competition, Kano Polo Club is a social and cultural hub. Members and visitors gather to play, unwind, and take in the action, with the club grounds offering a relaxed setting to enjoy the game, connect with fellow enthusiasts, and experience the hospitality the club is known for, including local food, drinks, and entertainment on match days and evenings.
               </p>
               <motion.div
                 whileHover={{ scale: 1.02 }}
