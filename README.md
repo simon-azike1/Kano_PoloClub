@@ -4,7 +4,8 @@
 
 Welcome to the official digital home of the **Kano Polo Club** - Nigeria's premier destination for polo excellence, heritage, and world-class sporting experiences. This React-based web application showcases the club's prestigious facilities, rich history, upcoming events, and now features the exquisite **Palazzo Restaurant** - a culinary jewel within our grounds.
 
-![Kano Polo Club Banner](https://via.placeholder.com/1200x400?text=Kano+Polo+Club+Banner)
+<img width="944" height="430" alt="image" src="https://github.com/user-attachments/assets/6df04fa3-c8f5-46f9-a061-6b6c5be9c991" />
+
 
 ## ✨ Features
 
