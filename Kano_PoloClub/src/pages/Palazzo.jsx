@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
-import { FieldMark, SectionHeading } from '../../../.kilo/worktrees/pacific-countess/Kano_PoloClub/src/components/ui';
-import { palazzoMedia } from '../data'; // <-- Imports the media data array
+import { FieldMark, SectionHeading } from '../components/ui';
+import { palazzoMedia } from '../data';
 
 // Custom card component for hover-to-play video logic
 const GalleryVideoItem = ({ media }) => {
